@@ -4,6 +4,14 @@ import torch.nn as nn
 
 class ConvLayer(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, norm='instance'):
+        """
+        Params:
+        - in_channels: (int) Number of channels in the input image
+        - out_channels: (int) Number of channels produced by the convolution
+        - kernel_size: (int or tuple) Size of the convolving kernel
+        - stride: (int or tuple) Stride of the convolution
+        - norm: (string, optional) Applies normalization. Accepted values: ['instance'(default), 'batch', 'None']
+        """
         super(ConvLayer, self).__init__()
         # Add padding
         padding_size = kernel_size//2
@@ -19,6 +27,8 @@ class ConvLayer(nn.Module):
             self.norm_layer = nn.InstanceNorm2d(out_channels, affine=True)
         elif(norm == 'batch'):
             self.norm_layer = nn.BatchNorm2d(out_channels, affine=True)
+        assert(norm in ['instance', 'batch', 'None']
+               ), 'Accepted values must belong to: "instance", "batch", "None"'
 
     def forward(self, x):
         x = self.reflection_pad(x)
@@ -34,7 +44,13 @@ class ResidualLayer(nn.Module):
     """
     Residual block that hops one layer.
     """
+
     def __init__(self, channels=128, kernel_size=3):
+        """
+        Params:
+        - channels: (int, optional) Number of channels. Default: 128
+        - kernel_size: (int or tuple, optional) Size of the convolving kernel. Default: 3
+        """
         super(ResidualLayer, self).__init__()
         self.conv1 = ConvLayer(channels, channels, kernel_size, 1)
         self.relu = nn.ReLU()
@@ -52,6 +68,46 @@ class ResidualLayer(nn.Module):
         return(out)
 
 
+class DeConvLayer(nn.Module):
+    """
+    Fractionally strided convolution layer or Deconvolution layer.
+    """
+
+    def __init__(self, in_channels, out_channels, kernel_size, stride, output_padding, norm="instance"):
+        """
+        Params:
+        - in_channels: (int) Number of channels in the input image
+        - out_channels: (int) Number of channels produced by the convolution
+        - kernel_size: (int or tuple) Size of the convolving kernel
+        - stride: (int or tuple) Stride of the convolution
+        - output_padding: (int or tuple) Additional size added to one side of the output shape
+        - norm: (string, optional) Applies normalization. Accepted values: ['instance'(default), 'batch', 'None']
+        """
+        super(DeConvLayer, self).__init__()
+
+        # Transposed Convolution or Fractional Convolution
+        padding_size = kernel_size // 2
+        self.conv_transpose = nn.ConvTranspose2d(
+            in_channels, out_channels, kernel_size, stride, padding_size, output_padding)
+
+        # Normalization Layer
+        self.norm_type = norm
+        if (norm == "instance"):
+            self.norm_layer = nn.InstanceNorm2d(out_channels, affine=True)
+        elif (norm == "batch"):
+            self.norm_layer = nn.BatchNorm2d(out_channels, affine=True)
+        assert(norm in ['instance', 'batch', 'None']
+               ), 'Accepted values must belong to: "instance", "batch", "None"'
+
+    def forward(self, x):
+        x = self.conv_transpose(x)
+        if(self.norm_type == 'None'):
+            out = x
+        else:
+            out = self.norm_layer(x)
+        return(out)
+
+
 class TransformNet(nn.Module):
     """
     Image Transform Net as described in Johnson et al
@@ -64,5 +120,7 @@ class TransformNet(nn.Module):
             ConvLayer(3, 32, 9, 1),
             nn.ReLU(),
             ConvLayer(32, 64, 3, 2),
-
+            nn.ReLU(),
+            ConvLayer(64, 128, 3, 2),
+            nn.ReLU()
         )

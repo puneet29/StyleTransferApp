@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms, models, datasets
+from transform import TransformNet
 
 # SETTINGS
 SAVED_MODEL = 'model/'
@@ -38,4 +39,4 @@ def train():
         train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
     # Load Network
-    TransformNet = 
+    TransformerNet = TransformNet().to(device)
