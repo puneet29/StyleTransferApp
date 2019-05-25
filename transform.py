@@ -115,6 +115,9 @@ class TransformNet(nn.Module):
     """
 
     def __init__(self):
+        """
+        Conv Block -> Residual Block -> DeConv Block
+        """
         super(TransformNet, self).__init__()
         self.ConvBlock = nn.Sequential(
             ConvLayer(3, 32, 9, 1),
@@ -124,3 +127,23 @@ class TransformNet(nn.Module):
             ConvLayer(64, 128, 3, 2),
             nn.ReLU()
         )
+        self.ResidualBlock = nn.Sequential(
+            ResidualLayer(128, 3),
+            ResidualLayer(128, 3),
+            ResidualLayer(128, 3),
+            ResidualLayer(128, 3),
+            ResidualLayer(128, 3)
+        )
+        self.DeConvBlock = nn.Sequential(
+            DeConvLayer(128, 64, 3, 2, 1),
+            nn.ReLU(),
+            DeConvLayer(64, 32, 3, 2, 1),
+            nn.ReLU(),
+            ConvLayer(32, 3, 9, 1, norm='None')
+        )
+
+    def forward(self, x):
+        x = self.ConvBlock(x)
+        x = self.ResidualBlock(x)
+        out = self.DeConvBlock(x)
+        return(out)
