@@ -16,6 +16,7 @@ models.
 ## Model
 
 ![Model diagram](images/README/Model.png)
+from [Johnson et al](https://arxiv.org/abs/1603.08155)
 
 Model makes use of a Transformation Network which converts the input image into
 output image. We use a loss network pretrained for image classification to
