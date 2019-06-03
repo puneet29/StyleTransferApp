@@ -1,16 +1,16 @@
 # Importing the resources
 import argparse
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
+import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torchvision import transforms, models, datasets
-from transform import TransformNet
-from utils import gram_matrix, image2tensor, load_image, plot_loss_hist, saveimg, tensor2image
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+from transformer import TransformNet
+from utils import gram_matrix, load_image, normalize_batch
 from vgg import VGG16
 
 
@@ -28,7 +28,7 @@ def check_paths(args):
 def train(args):
 
     # Select GPU if available
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = torch.device('cuda' if args.cuda else 'cpu')
 
     # Setting seeds
     np.random.seed(args.seed)
@@ -44,15 +44,96 @@ def train(args):
 
     # Datasets and Dataloaders
     train_dataset = datasets.ImageFolder(args.dataset, transform=transform)
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=True)
 
     # Load Network
-    TransformerNet = TransformNet().to(device)
-    vgg = VGG16().to(device)
+    transformer = TransformNet().to(device)
+    vgg = VGG16(False).to(device)
 
     # Optimizer
-    optimizer = optim.Adam(TransformerNet.parameters(), lr=args.lr)
+    optimizer = optim.Adam(transformer.parameters(), lr=args.lr)
+
+    # Loss function
+    mse_loss = nn.MSELoss()
+
+    # Style features
+    style_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: x.mul(255))
+    ])
+    style = load_image(args.style_image, size=args.style_size)
+    style = style_transform(style)
+    # Repeat tensor along the specified dimensions
+    style = style.repeat(args.batch_size, 1, 1, 1).to(device)
+
+    features_style = vgg(normalize_batch(style))
+    gram_style = [gram_matrix(x) for x in features_style]
+
+    # Training loop
+    for epoch in range(args.epochs):
+        transformer.train()
+        total_content_loss = 0.0
+        total_style_loss = 0.0
+        count = 0
+        for batch_id, (x, _) in enumerate(train_loader):
+
+            n_batch = len(x)
+            count += n_batch
+            optimizer.zero_grad()
+
+            # Output from transformer network -> y
+            x = x.to(device)
+            y = transformer(x)
+
+            # Normalize batches (y-> output from transformer, x-> raw input)
+            y = normalize_batch(y)
+            x = normalize_batch(x)
+
+            # Output from vgg model
+            features_y = vgg(y)
+            features_x = vgg(x)
+
+            # Calculate content loss
+            content_loss = args.content_weight * \
+                mse_loss(features_y.relu2_2, features_x.relu2_2)
+
+            # Calculate style loss
+            style_loss = 0.0
+            for ft_y, gm_s in zip(features_y, gram_style):
+                gm_y = gram_matrix(ft_y)
+                style_loss += mse_loss(gm_y, gm_s[:n_batch, :, :])
+            style_loss *= args.style_weight
+
+            # Calculate batch loss
+            total_loss = content_loss + style_loss
+            total_loss.backward()
+            optimizer.step()
+
+            # Calculate total loss
+            total_content_loss += content_loss.item()
+            total_style_loss += style_loss.item()
+
+            if((batch_id + 1) % args.log_interval == 0):
+                print(
+                    f'{time.ctime()}\tEpoch {epoch+1}:\t[{count}/{len(train_dataset)}]\tcontent: {total_content_loss / batch_id + 1}\tstyle: {total_style_loss / batch_id + 1}\ttotal: {(total_content_loss + total_style_loss) / (batch_id + 1)}')
+
+            if(args.checkpoint_model_dir is not None and (batch_id + 1) % args.checkpoint_interval == 0):
+                transformer.eval().cpu()
+                ckpt_model_filename = 'ckpt_epoch_' + \
+                    str(epoch) + "_batch_id_" + str(batch_id + 1) + '.pth'
+                ckpt_model_path = os.path.join(
+                    args.checkpoint_model_dir, ckpt_model_filename)
+                torch.save(transformer.state_dict(), ckpt_model_path)
+                transformer.to(device)
+    # Save model
+    transformer.eval().cpu()
+    save_model_filename = 'epoch_' + str(args.epochs) + '_' + str(time.ctime()).replace(
+        ' ', '_') + '_' + str(args.content_weight) + '_' + str(args.style_weight) + '.model'
+    save_model_path = os.path.join(args.save_model_dir, save_model_filename)
+    torch.save(transformer.state_dict(), save_model_path)
+
+    print('\nModel trained! It is saved at:', save_model_path)
 
 
 # Command line arguments
