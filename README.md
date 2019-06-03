@@ -13,6 +13,16 @@ but it can significantly speed up the process of training, the styling however
 can be done using CPU of a normal laptop or computer as well using the saved
 models.
 
+## Model
+
+![Model diagram](images/README/Model.png)
+
+Model makes use of a Transformation Network which converts the input image into
+output image. We use a loss network pretrained for image classification to
+define perceptual loss functions that measure perceptual differences in content
+and style between the images. The loss network remains fixed during the training
+process.
+
 ## Usage
 
 ### Stylize Image
