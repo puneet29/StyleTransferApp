@@ -1,38 +1,20 @@
-import cv2
 import torch
-from torchvision import transforms
+from PIL import Image
 
 
 def gram_matrix(tensor):
-    # needs testing
-    _, d, h, w = tensor.shape
-    tensor = tensor.view(d, h*w)
-
-    gram = torch.mm(tensor, tensor.t())
+    (b, ch, h, w) = tensor.size
+    features = tensor.view(b, ch, h*w)
+    features_t = features.transpose(1, 2)
+    gram = features.bmm(features_t) / (ch*h*w)
     return(gram)
 
 
-def load_image(path):
-    return(cv2.imread(path))
-
-
-def tensor2image(img, max_size=None):
-    if(max_size == None):
-        tensor = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406),
-                                 (0.229, 0.224, 0.225))
-        ])
-    else:
-        if(max(img.size) > max_size):
-            size = max_size
-        else:
-            size = max(img.size)
-        tensor = transforms.Compose([
-            transforms.Resize(size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406),
-                                 (0.229, 0.224, 0.225))
-        ])
-    tensor = tensor(img).unsqueeze(dim=0)
-    return(tensor)
+def load_image(filename, size=None, scale=None):
+    img = Image.open(filename)
+    if(size is not None):
+        img = img.resize((size, size), Image.ANTIALIAS)
+    if(scale is not None):
+        img = img.resize((int(img.size[0] / scale), int(img.size[1] / scale)),
+                         Image.ANTIALIAS)
+    return(img)
