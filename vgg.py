@@ -8,7 +8,7 @@ class VGG16(nn.Module):
         super(VGG16, self).__init__()
 
         # Load VGG16 skeleton, pretrained
-        vgg16_features = models.vgg(pretrained=False)
+        vgg16_features = models.vgg16(pretrained=False)
         vgg16_features.load_state_dict(torch.load(vgg_path), strict=False)
         self.features = vgg16_features.features
 
