@@ -138,7 +138,7 @@ def train(args):
 
 # Command line arguments
 arg_parser = argparse.ArgumentParser(
-    description="parser for fast-neural-style")
+    description="parser for fast-neural-style-training")
 
 arg_parser.add_argument("--epochs", type=int, default=2,
                         help="number of training epochs, default is 2")
