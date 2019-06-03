@@ -26,3 +26,10 @@ def normalize_batch(batch):
     std = batch.new_tensor([0.229, 0.224, 0.225]).view(-1, 1, 1)
     batch = batch.div_(255.0)
     return (batch - mean) / std
+
+
+def save_image(path, image):
+    img = image.clone().clamp(0, 255).numpy()
+    img = img.transpose(1, 2, 0).astype('uint8')
+    img = Image.fromarray(img)
+    img.save(path)
