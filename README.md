@@ -61,3 +61,10 @@ python train.py --dataset </path/to/train-dataset> --style-image </path/to/style
 
 The hyper-parameters content-weight and style-weight may be altered depending on
 the style to be trained on for better results.
+
+## Models
+
+- ### Mosaic
+
+Stored under models as: [mosaic.model](./models/mosaic.model)
+![Mosaic Style example](images/README/MosaicExample.jpg)
