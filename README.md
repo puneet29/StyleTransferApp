@@ -68,3 +68,4 @@ the style to be trained on for better results.
 
 Stored under models as: [mosaic.model](./models/mosaic.model)
 ![Mosaic Style example](images/README/MosaicExample.jpg)
+Credits for content image: [Aryaman Arya](https://www.instagram.com/aryaman_photography/)
