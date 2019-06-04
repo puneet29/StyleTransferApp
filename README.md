@@ -67,5 +67,5 @@ the style to be trained on for better results.
 - ### Mosaic
 
 Stored under models as: [mosaic.model](./models/mosaic.model)
-![Mosaic Style example](images/README/MosaicExample.jpg)
+<br><img alt= 'Mosaic Style example' src='images/README/MosaicExample.jpg' width='720'><br>
 Credits for content image: [Aryaman Arya](https://www.instagram.com/aryaman_photography/)
