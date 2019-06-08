@@ -6,6 +6,9 @@ paper by
 [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](https://arxiv.org/abs/1603.08155)
 and [Instance Normalization](https://arxiv.org/pdf/1607.08022.pdf).
 
+## Live demo
+Check out the live demo of these models at [bit.ly/styleApp](bit.ly/styleApp)
+
 ## Requirements
 
 The tool is written in Python and uses Pytorch and SciPy. A GPU is not required
