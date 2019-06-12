@@ -1,9 +1,8 @@
 # Importing the resources
 import argparse
 import sys
+
 import torch
-import torch.nn as nn
-import torch.optim as optim
 from torchvision import transforms
 from transformer import TransformNet
 from utils import load_image, save_image

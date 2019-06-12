@@ -1,5 +1,6 @@
-import torch
 from PIL import Image
+
+import torch
 
 
 def gram_matrix(tensor):
