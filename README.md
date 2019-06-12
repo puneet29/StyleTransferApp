@@ -65,6 +65,19 @@ python train.py --dataset </path/to/train-dataset> --style-image </path/to/style
 The hyper-parameters content-weight and style-weight may be altered depending on
 the style to be trained on for better results.
 
+### Live webcam stylizing
+
+```bash
+python webcam.py --model </path/to/saved/model> --width 640 --height 360 --cuda 1
+```
+
+- ```--model```: saved model for the style to be applied.
+- ```--width```: width of the image captured by camera, default 640
+- ```--height```: height of the image captured by camera, default 360
+- ```--cuda```: set 1 if you have cuda and a GPU else 0 (Preferably use a GPU for low latency)
+
+Press esc to exit the camera capture window.
+
 ## Models
 
 - ### Mosaic

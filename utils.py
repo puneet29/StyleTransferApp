@@ -34,3 +34,14 @@ def save_image(path, image):
     img = img.transpose(1, 2, 0).astype('uint8')
     img = Image.fromarray(img)
     img.save(path)
+
+
+def load_cam_image(img):
+    img = Image.fromarray(img)
+    return(img)
+
+
+def show_cam_image(img):
+    img = img.clone().clamp(0, 255).numpy()
+    img = img.transpose(1, 2, 0).astype('uint8')
+    return(img)
