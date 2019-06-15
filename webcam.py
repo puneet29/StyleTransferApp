@@ -86,7 +86,7 @@ eval_arg_parser.add_argument("--height", type=int, default=360,
 eval_arg_parser.add_argument("--save", type=bool, default=False,
                              help="save captured frame to video, default False")
 eval_arg_parser.add_argument("--output", type=str, default='output.avi',
-                             help="path to save .avi video, set --save to True, default 'output.avi'")
+                             help="path to save video, set --save to True, default 'output.avi'")
 eval_arg_parser.add_argument("--codec", type=str, default='XVID',
                              help="codec of output video, default XVID")
 eval_arg_parser.add_argument("--fps", type=int, default=20,
