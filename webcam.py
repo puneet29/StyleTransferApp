@@ -26,6 +26,12 @@ def webcam(args):
     cam.set(3, args.width)
     cam.set(4, args.height)
 
+    # Save video
+    if(args.save):
+        fourcc = cv2.VideoWriter_fourcc(*args.codec)
+        out = cv2.VideoWriter(args.output, fourcc, args.fps,
+                              (args.width, args.height))
+
     # Main loop
     with torch.no_grad():
         while(True):
@@ -51,6 +57,10 @@ def webcam(args):
             output = net(content_image).cpu()
             img2 = show_cam_image(output[0])
 
+            # Save frame to file
+            if(args.save):
+                out.write(img2)
+
             # Show webcam
             cv2.imshow('Webcam', img2)
             if(cv2.waitKey(1) == 27):
@@ -58,6 +68,7 @@ def webcam(args):
 
     # Free up memory
     cam.release()
+    out.release()
     cv2.destroyAllWindows()
 
 
@@ -72,6 +83,15 @@ eval_arg_parser.add_argument("--width", type=int, default=640,
                              help="set the width of the image captured by camera, default 640")
 eval_arg_parser.add_argument("--height", type=int, default=360,
                              help="set the height of the image captured by camera, default 360")
+eval_arg_parser.add_argument("--save", type=bool, default=False,
+                             help="save captured frame to video, default False")
+eval_arg_parser.add_argument("--output", type=str, default='output.avi',
+                             help="path to save .avi video, set --save to True, default 'output.avi'")
+eval_arg_parser.add_argument("--codec", type=str, default='XVID',
+                             help="codec of output video, default XVID")
+eval_arg_parser.add_argument("--fps", type=int, default=20,
+                             help="FPS of output video. Adjust according to your system, default 20")
+
 
 args = eval_arg_parser.parse_args()
 
