@@ -33,7 +33,9 @@ def stylize(args):
 
         # Output image
         output = style_model(content_image).cpu()
-    save_image(args.output_image, output[0])
+    weighted_output = output * args.style_strength + \
+        (content_image * (1 - args.style_strength))
+    save_image(args.output_image, weighted_output[0])
 
 
 # Command line arguments
@@ -49,6 +51,8 @@ eval_arg_parser.add_argument("--model", type=str, required=True,
                              help="saved model to be used for stylizing the image.")
 eval_arg_parser.add_argument("--cuda", type=int, required=True,
                              help="set it to 1 for running on GPU, 0 for CPU")
+eval_arg_parser.add_argument("--style-strength", type=float, default=1.0,
+                             help="set between 0 and 1, the strength of style, default 1.0")
 
 args = eval_arg_parser.parse_args()
 
