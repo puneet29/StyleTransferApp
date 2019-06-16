@@ -5,7 +5,7 @@ import sys
 import torch
 from torchvision import transforms
 from transformer import TransformNet
-from utils import load_image, save_image
+from utils import load_image, match_size, save_image
 
 
 def stylize(args):
@@ -33,6 +33,7 @@ def stylize(args):
 
         # Output image
         output = style_model(content_image).cpu()
+    content_image = match_size(content_image, output)
     weighted_output = output * args.style_strength + \
         (content_image * (1 - args.style_strength))
     save_image(args.output_image, weighted_output[0])

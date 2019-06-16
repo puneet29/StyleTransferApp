@@ -1,6 +1,7 @@
 from PIL import Image
 
 import torch
+from torchvision import transforms
 
 
 def gram_matrix(tensor):
@@ -27,6 +28,17 @@ def normalize_batch(batch):
     std = batch.new_tensor([0.229, 0.224, 0.225]).view(-1, 1, 1)
     batch = batch.div_(255.0)
     return (batch - mean) / std
+
+
+def match_size(image, imageToMatch):
+    img = image.squeeze(0)
+    transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((imageToMatch.shape[2], imageToMatch.shape[3])),
+        transforms.ToTensor()
+    ])
+    img = transform(img)
+    return(img)
 
 
 def save_image(path, image):
