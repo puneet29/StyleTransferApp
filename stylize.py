@@ -33,6 +33,7 @@ def stylize(args):
 
         # Output image
         output = style_model(content_image).cpu()
+
     content_image = match_size(content_image, output)
     weighted_output = output * args.style_strength + \
         (content_image * (1 - args.style_strength))
