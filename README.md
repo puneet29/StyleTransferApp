@@ -40,6 +40,7 @@ python stylize.py --content-image </path/to/content/image> --model </path/to/sav
 - ```--output-image```: path to the output image(with name and extension).
 - ```--cuda```: set 1 if you have cuda and a GPU else 0
 - ```--content-scale```: factor by which you want to scale down the image(for low memory issues). (Optional, default: None)
+- ```--style-strength```: the strength of style to be applied. (Optional, default: 1)
 
 ### Train Model
 
