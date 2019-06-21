@@ -8,7 +8,7 @@ and [Instance Normalization](https://arxiv.org/pdf/1607.08022.pdf).
 
 ## Live demo
 
-Check out the live demo of these models at [bit.ly/stylizeapp](http://bit.ly/stylizeapp)
+Check out the live demo of these models at [bit.ly/stylizeapp](http://bit.ly/stylizeapp)  
 GitHub repo for the website: [Stylize App](https://github.com/puneet29/stylizeapp)
 
 ## Requirements
@@ -89,6 +89,6 @@ Press esc to exit the camera capture window.
 
 - ### Mosaic
 
-Stored under models as: [mosaic.model](./models/mosaic.model)
-<br><img alt= 'Mosaic Style example' src='images/README/MosaicExample.jpg' width='720'><br>
+Stored under models as: [mosaic.model](./models/mosaic.model)  
+<img alt= 'Mosaic Style example' src='images/README/MosaicExample.jpg' width='720'>  
 Credits for content image: [Aryaman Arya](https://www.instagram.com/aryaman_photography/)
