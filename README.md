@@ -7,7 +7,9 @@ paper by
 and [Instance Normalization](https://arxiv.org/pdf/1607.08022.pdf).
 
 ## Live demo
-Check out the live demo of these models at [bit.ly/styleApp](http://bit.ly/styleApp)
+
+Check out the live demo of these models at [bit.ly/stylizeapp](http://bit.ly/stylizeapp)
+GitHub repo for the website: [Stylize App](https://github.com/puneet29/stylizeapp)
 
 ## Requirements
 
