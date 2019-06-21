@@ -70,6 +70,8 @@ the style to be trained on for better results.
 
 ### Live webcam stylizing
 
+![Webcam example](images/README/webcamDemo.gif)
+
 ```bash
 python webcam.py --model </path/to/saved/model> --width 640 --height 360 --cuda 1
 ```
