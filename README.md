@@ -76,6 +76,10 @@ python webcam.py --model </path/to/saved/model> --width 640 --height 360 --cuda 
 - ```--width```: width of the image captured by camera, default 640
 - ```--height```: height of the image captured by camera, default 360
 - ```--cuda```: set 1 if you have cuda and a GPU else 0 (Preferably use a GPU for low latency)
+- ```--save```: save captured frame to video, default False
+- ```--output```: path to save video, set --save to True, default 'output.avi'
+- ```--codec```: codec of output video, default XVID
+- ```--fps```: FPS of output video. Adjust according to your system, default 20
 
 Press esc to exit the camera capture window.
 
