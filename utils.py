@@ -13,7 +13,7 @@ def gram_matrix(tensor):
 
 
 def load_image(filename, size=None, scale=None):
-    img = Image.open(filename)
+    img = Image.open(filename).convert('RGB')
     if(size is not None):
         img = img.resize((size, size), Image.ANTIALIAS)
     if(scale is not None):
