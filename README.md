@@ -32,7 +32,7 @@ process.
 ## Usage
 
 - Clone the repository.
-- If you want to use the pretrained models, download them from [models](models/) folder.
+- If you want to use the pretrained models, download them from [this link](https://drive.google.com/open?id=1KSg5hFV14O4M7zxc-axeM90k1laVG-_W).
 
 ### Stylize Image
 
