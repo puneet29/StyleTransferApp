@@ -31,6 +31,9 @@ process.
 
 ## Usage
 
+- Clone the repository.
+- If you want to use the pretrained models, download them from [models](models/) folder.
+
 ### Stylize Image
 
 ```bash
